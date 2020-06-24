@@ -7,9 +7,7 @@ import org.apache.commons.csv.CSVRecord;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by LaunchCode
@@ -20,6 +18,29 @@ public class JobData {
     private static Boolean isDataLoaded = false;
 
     private static ArrayList<HashMap<String, String>> allJobs;
+
+    public static ArrayList<HashMap<String, String>> findByValue(String query){
+
+        // load data if needed
+        loadData();
+
+        ArrayList<HashMap<String, String>> jobResults = new ArrayList<>();
+        String lowerCaseQuery = query.toLowerCase();
+
+        for (HashMap<String, String> job : allJobs) {
+            ArrayList<String> allValues = new ArrayList<>(job.values());
+            for (String value : allValues) {
+                if (jobResults.contains(job)) {
+                    continue;
+                } else if (value.toLowerCase().contains(lowerCaseQuery)) {
+                    jobResults.add(job);
+                }
+            }
+
+        }
+
+        return jobResults;
+    }
 
     /**
      * Fetch list of all values from loaded data,
@@ -42,6 +63,8 @@ public class JobData {
                 values.add(aValue);
             }
         }
+
+        Collections.sort(values);
 
         return values;
     }
@@ -72,11 +95,13 @@ public class JobData {
 
         ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
 
+        String lowerCaseValue = value.toLowerCase();
+
         for (HashMap<String, String> row : allJobs) {
 
-            String aValue = row.get(column);
+            String aValue = row.get(column).toLowerCase();
 
-            if (aValue.contains(value)) {
+            if (aValue.contains(lowerCaseValue)) {
                 jobs.add(row);
             }
         }
