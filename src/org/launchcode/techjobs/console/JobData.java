@@ -74,7 +74,7 @@ public class JobData {
         // load data, if not already loaded
         loadData();
 
-        return allJobs;
+        return new ArrayList(allJobs);
     }
 
     /**
